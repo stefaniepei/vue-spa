@@ -1,12 +1,11 @@
 import Vue from 'vue'
-import ElementUI from 'element-ui'
+import './assets/css/reset.min.css'
 import 'element-ui/lib/theme-chalk/index.css';
+import ElementUI from 'element-ui'
 import App from '../pc/PCApp'
 import MobileApp from './mobile/MobileApp'
-
 import store from './stores'
 
-import './assets/css/reset.min.css'
 Vue.use(ElementUI)
 
 const isPc = Utils.checkIsPc()

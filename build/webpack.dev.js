@@ -1,42 +1,44 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin'); // 通过 npm 安装
-const webpack = require('webpack'); // 用于访问内置插件
-
-let fs = require('fs'),
-    path = require('path');
+const { VueLoaderPlugin } = require('vue-loader') 
+let path = require('path');
 
 // 存储的是当前模块执行所在的绝对路径(!==__dirname)
 let dirname = path.resolve();
 
 module.exports = {
   mode: 'development',
+  devtool: 'eval-source-map',
   entry: {
     app: './src/app.js'
   },
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: '[name].bundle.js',
-    publicPath: process.env.NODE_ENV === 'production'
-      ? config.build.assetsPublicPath
-      : config.dev.assetsPublicPath
+    path: path.resolve(__dirname, 'dist'), // html, css, js 图片等资源文件的输出路径，将所有资源文件放在 Public 目录
+    publicPath: '/',                       // html, css, js 图片等资源文件的 server 上的路径
+    filename: 'js/[name].[hash].js'        // 每个入口 js 文件的生成配置
+  },
+  resolve: {
+    extensions: ['.js', '.vue', '.json'],
+    alias: {
+      'vue$': 'vue/dist/vue.esm.js', //完整版本的vue
+    }
   },
   module: {
     rules: [
       {
         test: /\.vue$/,
         loader: 'vue-loader',
-        options: vueLoaderConfig
       },
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
+        exclude: /node_modules/
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
         options: {
           limit: 10000,
-          name: utils.assetsPath('img/[name].[hash:7].[ext]')
+          name: './img/[name].[ext]?[hash:7]'
         }
       },
       {
@@ -44,7 +46,7 @@ module.exports = {
         loader: 'url-loader',
         options: {
           limit: 10000,
-          name: utils.assetsPath('media/[name].[hash:7].[ext]')
+          name: './media/[name].[ext]?[hash:7]'
         }
       },
       {
@@ -52,18 +54,20 @@ module.exports = {
         loader: 'url-loader',
         options: {
           limit: 10000,
-          name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
+          name: './font/[name].[ext]?[hash:7]'
         }
       },  
       {
         test: /\.scss$/,
         loaders: ["style", "css", "sass"]
       },
+      { test: /\.css$/,
+        loaders: ['vue-style-loader'] 
+      },
     ]
   },
   plugins: [
+    new VueLoaderPlugin(),
     new HtmlWebpackPlugin({template: './src/index.html'})
   ]
 };
-
-module.exports = config;
