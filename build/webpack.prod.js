@@ -27,7 +27,7 @@ module.exports = {
     filename: 'js/[name].[hash].js'        // 每个入口 js 文件的生成配置
   },
   resolve: {
-    extensions: ['.js', '.vue', '.json'],
+    extensions: ['.vue','.js', '.json'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js', //完整版本的vue
       '@': resolve('src'),
