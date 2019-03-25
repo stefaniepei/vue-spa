@@ -1,6 +1,7 @@
 # vue-spa
 
-> Vue Spa 脚手架
+> Vue 脚手架
+vue-cli3版：https://github.com/stefaniepei/vue-spa-cli
 
 ## Build Setup
 
