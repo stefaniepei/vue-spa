@@ -1,6 +1,5 @@
 let path = require('path');
 // 将样式提取到单独的 css 文件中，而不是打包到 js 文件或使用 style 标签插入在 head 标签中
-let CleanWebpackPlugin = require('clean-webpack-plugin');
 let MiniCssExtractPlugin = require('mini-css-extract-plugin');
 let VueLoaderPlugin = require('vue-loader/lib/plugin');
 // css、js压缩、优化插件
@@ -12,17 +11,17 @@ let HtmlWebpackPlugin = require('html-webpack-plugin');
 let glob = require('glob');
 
 let entries = getEntry('./source/**/index.js'); // 获得入口 js 文件
-let chunks = Object.keys(entries);
+// let chunks = Object.keys(entries);
 
 module.exports = {
   mode: 'production',
-  devtool = 'source-map',
+  devtool: 'source-map',
   // entry: entries,
   entry: {
     app: './src/app.js'
   },
   output: {
-    path: path.resolve(__dirname, 'dist'), // html, css, js 图片等资源文件的输出路径，将所有资源文件放在 Public 目录
+    path: path.resolve(__dirname, '../dist'), // html, css, js 图片等资源文件的输出路径，将所有资源文件放在 Public 目录
     publicPath: '/',                       // html, css, js 图片等资源文件的 server 上的路径
     filename: 'js/[name].[hash].js'        // 每个入口 js 文件的生成配置
   },
@@ -30,7 +29,6 @@ module.exports = {
     extensions: ['.vue','.js', '.json'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js', //完整版本的vue
-      '@': resolve('src'),
     }
   },
   module: {
@@ -79,25 +77,12 @@ module.exports = {
   },
   plugins: [
     new VueLoaderPlugin(),
-    new HtmlWebpackPlugin({template: './src/index.html'}),
+    // new HtmlWebpackPlugin({template: './src/index.html'}),
     new MiniCssExtractPlugin({
       filename: 'css/[name].css'
     }),
-    new CleanWebpackPlugin([
-      path.resolve(__dirname, './dist/js'),
-      path.resolve(__dirname, './dist/css')
-    ]),
   ],
   optimization: {
-    splitChunks: {
-      cacheGroups: {
-        vendors: {
-          name: 'vendors',
-          chunks: 'all',
-          minChunks: chunks.length, 
-        }
-      }
-    },
     minimizer:[
       new TerserPlugin({ // 压缩js
         cache: true,
@@ -112,11 +97,11 @@ module.exports = {
   }
 };
 
-var pages = getEntry('./src/**/*.html');
-for (var pathname in pages) {
+let pages = getEntry('./src/**/*.html');
+for (let pathname in pages) {
   // 配置生成的 html 文件，定义路径等
-  var conf = {
-    filename: prod ? '../Application/Home/View/' + pathname + '.html' : pathname + '.html', // html 文件输出路径
+  let conf = {
+    filename: pathname + '.html', // html 文件输出路径
     template: pages[pathname], // 模板路径
     inject: true,              // js 插入位置
     minify: {
@@ -128,20 +113,23 @@ for (var pathname in pages) {
     conf.chunks = ['vendors', pathname];
     conf.hash = false;
   }
+  console.log({conf});
+  console.log({pages});
   // 需要生成几个 html 文件，就配置几个 HtmlWebpackPlugin 对象
   module.exports.plugins.push(new HtmlWebpackPlugin(conf));
 }
 
 // 根据项目具体需求，输出正确的 js 和 html 路径
 function getEntry(globPath) {
-  var entries = {},
+  let entries = {},
     pathname;
 
   glob.sync(globPath).forEach(function (entry) {
     // basename = path.basename(entry, path.extname(entry));
-    pathname = entry.split('/').splice(-3, 2).join('/'); // 正确输出 js 和 html 的路径
+    console.log({entry})
+    pathname = entry.substring(entry.lastIndexOf('/'), entry.lastIndexOf('.')); // 正确输出 js 和 html 的路径
+    console.log({pathname})
     entries[pathname] = entry;
   });
-  console.log(entries);
   return entries;
 }

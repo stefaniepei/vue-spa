@@ -5,11 +5,12 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
+  mode: 'production',
   entry: {
     vendor: ['vue/dist/vue.esm.js', 'axios', 'vuex', 'vue-router', 'element-ui'] // 所需要的打包前端公共模块
   },
   output: {
-    path: path.resolve(__dirname, 'Public'), // 打包后文件输出的位置
+    path: path.resolve(__dirname, 'dist'), // 打包后文件输出的位置
     filename: '[name].dll.js',
     /**
      * output.library
@@ -37,7 +38,7 @@ module.exports = {
        * 定义 manifest 文件生成的位置
        * [name]的部分由entry的名字替换
        */
-      path: path.join(__dirname, '.', 'Public/[name]-manifest.json'),
+      path: path.join(__dirname, '.', 'dist/[name]-manifest.json'),
       /**
        * name
        * dll bundle 输出到那个全局变量上

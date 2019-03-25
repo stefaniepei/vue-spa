@@ -12,7 +12,7 @@ module.exports = {
     app: './src/app.js'
   },
   output: {
-    path: path.resolve(__dirname, 'dist'), // html, css, js 图片等资源文件的输出路径，将所有资源文件放在 Public 目录
+    path: path.resolve(__dirname, '../dist'), // html, css, js 图片等资源文件的输出路径，将所有资源文件放在 dist 目录
     publicPath: '/',                       // html, css, js 图片等资源文件的 server 上的路径
     filename: 'js/[name].[hash].js'        // 每个入口 js 文件的生成配置
   },
